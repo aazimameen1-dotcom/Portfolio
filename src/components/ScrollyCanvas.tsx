@@ -13,22 +13,23 @@ const ScrollyCanvas = ({ scrollYProgress }: ScrollyCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [images, setImages] = useState<HTMLImageElement[]>([]);
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
   useEffect(() => {
     const imgArray: HTMLImageElement[] = [];
-    let loadedFirstFrames = 0;
+    let loadedCount = 0;
 
     for (let i = 0; i < FRAME_COUNT; i++) {
       const img = new Image();
       const frameNum = i.toString().padStart(3, "0");
       img.src = `/sequence/frame_${frameNum}_delay-0.066s.png`;
       img.onload = () => {
-        // Unlock immediately when the first 2 frames load for instant startup
-        if (i < 2) {
-          loadedFirstFrames++;
-          if (loadedFirstFrames >= 1) {
-            setImagesLoaded(true);
-          }
+        loadedCount++;
+        setLoadingProgress(Math.floor((loadedCount / FRAME_COUNT) * 100));
+
+        if (loadedCount === FRAME_COUNT) {
+          // Slight artificial pause to let the user see 100%
+          setTimeout(() => setImagesLoaded(true), 150);
         }
       };
       imgArray.push(img);
@@ -40,22 +41,18 @@ const ScrollyCanvas = ({ scrollYProgress }: ScrollyCanvasProps) => {
     if (!images[index] || !canvasRef.current) return;
     
     const img = images[index];
-    // Do not attempt to draw if the image is still downloading
     if (!img.complete || img.naturalWidth === 0) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Set internal canvas resolution based on device pixel ratio for sharpness
     const dpr = window.devicePixelRatio || 1;
-    // We update canvas width/height to window size
     const rect = canvas.getBoundingClientRect();
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
     ctx.scale(dpr, dpr);
 
-    // Image calculations to cover the whole canvas (object-fit: cover)
     const canvasRatio = rect.width / rect.height;
     const imgRatio = img.width / img.height;
 
@@ -74,7 +71,6 @@ const ScrollyCanvas = ({ scrollYProgress }: ScrollyCanvasProps) => {
     }
 
     ctx.clearRect(0, 0, rect.width, rect.height);
-    // Dark background as fallback
     ctx.fillStyle = "#121212";
     ctx.fillRect(0, 0, rect.width, rect.height);
     ctx.drawImage(img, xOffset, yOffset, renderWidth, renderHeight);
@@ -86,7 +82,6 @@ const ScrollyCanvas = ({ scrollYProgress }: ScrollyCanvasProps) => {
         FRAME_COUNT - 1,
         Math.floor(latest * FRAME_COUNT)
       );
-      // use requestAnimationFrame for performance
       requestAnimationFrame(() => drawFrame(frameIndex));
     }
   });
@@ -98,7 +93,6 @@ const ScrollyCanvas = ({ scrollYProgress }: ScrollyCanvasProps) => {
 
     const handleResize = () => {
       if (imagesLoaded) {
-        // Redraw current frame on resize
         const currentProgress = scrollYProgress.get();
         const frameIndex = Math.min(
           FRAME_COUNT - 1,
@@ -113,19 +107,32 @@ const ScrollyCanvas = ({ scrollYProgress }: ScrollyCanvasProps) => {
   }, [imagesLoaded, scrollYProgress, drawFrame]);
 
   return (
-    <div className="absolute inset-0 w-full h-full">
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full object-cover"
-      />
+    <>
+      <div className="absolute inset-0 w-full h-full">
+        <canvas
+          ref={canvasRef}
+          className="w-full h-full object-cover"
+        />
+      </div>
+
       {!imagesLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-[#121212] z-50">
-          <div className="text-white text-sm font-mono tracking-widest animate-pulse">
-            LOADING ASSETS...
+        <div className="fixed top-0 left-0 w-screen h-screen flex flex-col items-center justify-center bg-[#121212] z-[9999]">
+          <div className="text-white text-5xl md:text-7xl font-bold tracking-tighter mb-4 tabular-nums">
+            {loadingProgress}%
+          </div>
+          <div className="text-gray-500 text-sm font-mono tracking-widest uppercase">
+            Loading Cinematic Assets
+          </div>
+          
+          <div className="w-64 md:w-96 h-1 bg-white/10 mt-8 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-white transition-all duration-300 ease-out"
+              style={{ width: `${loadingProgress}%` }}
+            />
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
