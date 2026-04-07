@@ -31,11 +31,11 @@ const Overlay = ({ scrollYProgress }: OverlayProps) => {
   const display3 = useTransform(scrollYProgress, (pos) => pos < 0.59 ? "none" : "flex");
 
   return (
-    <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-center">
+    <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10">
       {/* SECTION 1: Center */}
       <motion.div
         style={{ opacity: opacity1, y: y1, display: display1 }}
-        className="absolute top-0 left-0 w-full h-full px-8 md:px-24 flex-col items-center justify-center text-center"
+        className="absolute top-0 left-0 w-full h-full px-8 md:px-24 flex flex-col items-center justify-center text-center"
       >
         <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-4 text-white">
           Aazim Ameen
@@ -48,7 +48,7 @@ const Overlay = ({ scrollYProgress }: OverlayProps) => {
       {/* SECTION 2: Left aligned */}
       <motion.div
         style={{ opacity: opacity2, y: y2, display: display2 }}
-        className="absolute top-0 left-0 w-full h-full px-8 md:px-24 flex-col items-start justify-center text-left pointer-events-auto"
+        className="absolute top-0 left-0 w-full h-full px-8 md:px-24 flex flex-col items-start justify-center text-left pointer-events-auto"
       >
         <div className="max-w-full w-full md:max-w-3xl">
           <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4 text-white">
@@ -63,7 +63,7 @@ const Overlay = ({ scrollYProgress }: OverlayProps) => {
       {/* SECTION 3: Right aligned */}
       <motion.div
         style={{ opacity: opacity3, y: y3, display: display3 }}
-        className="absolute top-0 left-0 w-full h-full px-8 md:px-24 flex-col items-end justify-center text-right pointer-events-auto"
+        className="absolute top-0 left-0 w-full h-full px-8 md:px-24 flex flex-col items-end justify-center text-right pointer-events-auto"
       >
         <div className="max-w-full w-full md:max-w-2xl ml-auto">
           <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4 text-white">
