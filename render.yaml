@@ -1,10 +1,6 @@
 services:
   - type: web
     name: aazim-portfolio
-    env: static
+    env: node
     buildCommand: npm ci && npm run build
-    staticPublishPath: out
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
+    startCommand: npm run start
