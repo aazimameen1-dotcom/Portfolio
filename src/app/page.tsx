@@ -21,11 +21,14 @@ export default function Home() {
       <div ref={containerRef} className="relative h-[500vh]">
         {/* Sticky Canvas Container */}
         <div className="sticky top-0 h-screen w-full overflow-hidden">
-          {/* We pass scrollYProgress to ScrollyCanvas for rendering the frames */}
-          <ScrollyCanvas scrollYProgress={scrollYProgress} />
-          
-          {/* The Text Overlay sits correctly over the canvas */}
-          <Overlay scrollYProgress={scrollYProgress} />
+          {/* Workaround for iOS/WebKit: establish an explicit relative containing block */}
+          <div className="relative w-full h-full">
+            {/* We pass scrollYProgress to ScrollyCanvas for rendering the frames */}
+            <ScrollyCanvas scrollYProgress={scrollYProgress} />
+            
+            {/* The Text Overlay sits correctly over the canvas */}
+            <Overlay scrollYProgress={scrollYProgress} />
+          </div>
         </div>
       </div>
 
