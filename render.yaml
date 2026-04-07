@@ -3,4 +3,8 @@ services:
     name: aazim-portfolio
     env: static
     buildCommand: npm ci && npm run build
-    staticPublishPath: ./out
+    staticPublishPath: out
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
