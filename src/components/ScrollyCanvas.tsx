@@ -15,18 +15,20 @@ const ScrollyCanvas = ({ scrollYProgress }: ScrollyCanvasProps) => {
   const [imagesLoaded, setImagesLoaded] = useState(false);
 
   useEffect(() => {
-    let loadedCount = 0;
     const imgArray: HTMLImageElement[] = [];
+    let loadedFirstFrames = 0;
 
     for (let i = 0; i < FRAME_COUNT; i++) {
       const img = new Image();
-      // Format number to 3 digits: 000, 001, ..., 119
       const frameNum = i.toString().padStart(3, "0");
       img.src = `/sequence/frame_${frameNum}_delay-0.066s.png`;
       img.onload = () => {
-        loadedCount++;
-        if (loadedCount === FRAME_COUNT) {
-          setImagesLoaded(true);
+        // Unlock immediately when the first 2 frames load for instant startup
+        if (i < 2) {
+          loadedFirstFrames++;
+          if (loadedFirstFrames >= 1) {
+            setImagesLoaded(true);
+          }
         }
       };
       imgArray.push(img);
@@ -36,8 +38,12 @@ const ScrollyCanvas = ({ scrollYProgress }: ScrollyCanvasProps) => {
 
   const drawFrame = useCallback((index: number) => {
     if (!images[index] || !canvasRef.current) return;
+    
+    const img = images[index];
+    // Do not attempt to draw if the image is still downloading
+    if (!img.complete || img.naturalWidth === 0) return;
+
     const canvas = canvasRef.current;
-    // ... rest of draw frame
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -50,7 +56,6 @@ const ScrollyCanvas = ({ scrollYProgress }: ScrollyCanvasProps) => {
     ctx.scale(dpr, dpr);
 
     // Image calculations to cover the whole canvas (object-fit: cover)
-    const img = images[index];
     const canvasRatio = rect.width / rect.height;
     const imgRatio = img.width / img.height;
 
