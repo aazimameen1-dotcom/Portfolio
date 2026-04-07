@@ -31,11 +31,11 @@ const Overlay = ({ scrollYProgress }: OverlayProps) => {
   const display3 = useTransform(scrollYProgress, (pos) => pos < 0.59 ? "none" : "flex");
 
   return (
-    <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-center px-8 md:px-24">
+    <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-center">
       {/* SECTION 1: Center */}
       <motion.div
         style={{ opacity: opacity1, y: y1, display: display1 }}
-        className="absolute inset-0 flex-col items-center justify-center text-center"
+        className="absolute top-0 left-0 w-full h-full px-8 md:px-24 flex-col items-center justify-center text-center"
       >
         <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-4 text-white">
           Aazim Ameen
@@ -48,27 +48,31 @@ const Overlay = ({ scrollYProgress }: OverlayProps) => {
       {/* SECTION 2: Left aligned */}
       <motion.div
         style={{ opacity: opacity2, y: y2, display: display2 }}
-        className="absolute inset-0 flex-col items-start justify-center left-8 md:left-24 text-left pointer-events-auto max-w-3xl"
+        className="absolute top-0 left-0 w-full h-full px-8 md:px-24 flex-col items-start justify-center text-left pointer-events-auto"
       >
-        <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4 text-white">
-          Creative & Technical.
-        </h2>
-        <p className="text-lg md:text-xl text-gray-400 font-light leading-relaxed">
-          Self-employed photographer with over five years of experience specializing in creative and technical photography. Proficient in Adobe Lightroom, photography, and video production, combining artistic vision with technical expertise to deliver impactful visual content.
-        </p>
+        <div className="max-w-full w-full md:max-w-3xl">
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4 text-white">
+            Creative & Technical.
+          </h2>
+          <p className="text-lg md:text-xl text-gray-400 font-light leading-relaxed">
+            Self-employed photographer with over five years of experience specializing in creative and technical photography. Proficient in Adobe Lightroom, photography, and video production, combining artistic vision with technical expertise to deliver impactful visual content.
+          </p>
+        </div>
       </motion.div>
 
       {/* SECTION 3: Right aligned */}
       <motion.div
         style={{ opacity: opacity3, y: y3, display: display3 }}
-        className="absolute inset-0 flex-col items-end justify-center right-8 md:right-24 text-right pointer-events-auto max-w-2xl"
+        className="absolute top-0 left-0 w-full h-full px-8 md:px-24 flex-col items-end justify-center text-right pointer-events-auto"
       >
-        <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4 text-white">
-          Crafting Narratives.
-        </h2>
-        <p className="text-lg md:text-xl text-gray-400 font-light">
-          Student at IUST, Pulwama pursuing a B.S. in Design Your Own Degree. Dedicated to crafting compelling visual narratives that resonate with diverse audiences through Photography and Vibe Coding.
-        </p>
+        <div className="max-w-full w-full md:max-w-2xl ml-auto">
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4 text-white">
+            Crafting Narratives.
+          </h2>
+          <p className="text-lg md:text-xl text-gray-400 font-light">
+            Student at IUST, Pulwama pursuing a B.S. in Design Your Own Degree. Dedicated to crafting compelling visual narratives that resonate with diverse audiences through Photography and Vibe Coding.
+          </p>
+        </div>
       </motion.div>
     </div>
   );
